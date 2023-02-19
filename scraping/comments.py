@@ -6,17 +6,16 @@ import googleapiclient.discovery
 import pdb
 
 def get_comments(url_lst):
-    return_lst = []
+    raw_comments = []
 
     for url in url_lst:
         video = re.search(r'(?<=v=)[\w-]+', url)
         if video:
             video = video.group(0)
-            print(video)
-            return_lst += [get_request(videoId=video)]
-    
+            raw_comments += [get_request(videoId=video)]
+
     with open("comment_data.json", "w") as f:
-        json.dump(return_lst, f)
+        json.dump(raw_comments, f)
 
 
 def get_request(videoId):
