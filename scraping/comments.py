@@ -1,16 +1,25 @@
 import requests
 import os
 import re
+import json
 import googleapiclient.discovery
+import pdb
 
 def get_comments(url_lst):
     return_lst = []
 
     for url in url_lst:
+        video = re.search(r'(?<=v=)[\w-]+', url)
+        if video:
+            video = video.group(0)
+            print(video)
+            return_lst += [get_request(videoId=video)]
+    
+    with open("comment_data.json", "w") as f:
+        json.dump(return_lst, f)
 
-        get_request(videoId="YzZUIYRCE38")
 
-def get_request(videoId="YzZUIYRCE38"):
+def get_request(videoId):
     api_key = "AIzaSyBgP4m7PSCyZMn8V_cGnl4z6uAXryUtYFs"
 
     url = f"https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId={videoId}&key={api_key}"
@@ -35,9 +44,10 @@ def get_comments_api(videoId="YzZUIYRCE38"):
 
     return response
 
-url_lst = ["https://www.youtube.com/watch?v=jcgCSbiKoaI",
-           "https://www.youtube.com/watch?v=vAQTBrOxUMU",
-           "https://www.youtube.com/watch?v=EkbDQAH71Yg"]
+url_lst = ["https://www.youtube.com/watch?v=IrGZ66uKcl0",
+           "https://www.youtube.com/watch?v=RrH40nCcjwE",
+           "https://www.youtube.com/watch?v=V4-ycdxqimA",
+           "https://www.youtube.com/watch?v=R6-6wV0agvs"]
 get_comments(url_lst)
 
 
