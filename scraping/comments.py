@@ -1,3 +1,7 @@
+"""
+    Authored by Jessup Jong
+"""
+
 import requests
 import os
 import re
@@ -43,11 +47,12 @@ def get_comments_api(videoId="YzZUIYRCE38"):
 
     return response
 
-url_lst = ["https://www.youtube.com/watch?v=IrGZ66uKcl0",
-           "https://www.youtube.com/watch?v=RrH40nCcjwE",
-           "https://www.youtube.com/watch?v=V4-ycdxqimA",
-           "https://www.youtube.com/watch?v=R6-6wV0agvs"]
-get_comments(url_lst)
+if __name__ == "__main__":
+    url_lst = ["https://www.youtube.com/watch?v=IrGZ66uKcl0",
+            "https://www.youtube.com/watch?v=RrH40nCcjwE",
+            "https://www.youtube.com/watch?v=V4-ycdxqimA",
+            "https://www.youtube.com/watch?v=R6-6wV0agvs"]
+    get_comments(url_lst)
 
 
 # Possibly think about storing data in database
