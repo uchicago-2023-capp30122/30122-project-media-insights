@@ -1,4 +1,4 @@
-import data.comments
+import comments
 
 response = comments.get_comments_simple()
 print(response)
