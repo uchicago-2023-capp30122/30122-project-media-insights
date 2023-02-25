@@ -9,23 +9,7 @@ import pandas as pd
 from autocorrect import Speller
 from time import sleep
 
-with open("scraping/cleaned_comment_data.json",'r') as f:
-    data = json.loads(f.read())
-
-raw_comments = pd.json_normalize(data)
-
-# Credit: https://stackoverflow.com/questions/51217909/removing-all-emojis-from-text
-def remove_emojis(text: str):
-    """
-    Remove emojis from strings
-
-    Parameters:
-        text (str): The input string
-
-    Returns:
-        (str) The string with emojis removed
-    """
-    emoji_pattern = re.compile("["
+EMOJI_PATTERN = re.compile("["
         u"\U0001F600-\U0001F64F"
         u"\U0001F300-\U0001F5FF" 
         u"\U0001F680-\U0001F6FF" 
@@ -43,7 +27,23 @@ def remove_emojis(text: str):
         u"\u2640-\u2642"
         "]+", flags=re.UNICODE)
 
-    cleaner_text = emoji_pattern.sub(r'', text)
+with open("scraping/cleaned_comment_data.json",'r') as f:
+    data = json.loads(f.read())
+
+raw_comments = pd.json_normalize(data)
+
+# Credit: https://stackoverflow.com/questions/51217909/removing-all-emojis-from-text
+def remove_emojis(text: str):
+    """
+    Remove emojis from strings
+
+    Parameters:
+        text (str): The input string
+
+    Returns:
+        (str) The string with emojis removed
+    """
+    cleaner_text = EMOJI_PATTERN.sub(r'', text)
 
     return cleaner_text
 
