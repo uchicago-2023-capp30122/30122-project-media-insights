@@ -1,4 +1,26 @@
 import comments
+"""
+    Authored by Jessup Jong
+"""
 
-response = comments.get_comments_simple()
-print(response)
+import comments
+import json
+import pdb
+
+with open("comment_data.json", "r") as f:
+    video_responses = json.load(f)
+
+cleaned_comments = {}
+for video_response in video_responses:
+    cleaned_video = []
+    for i, comment in enumerate(video_response["items"]):
+        try:
+            text = comment["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
+            date = comment["snippet"]["topLevelComment"]["snippet"]["publishedAt"]
+            cleaned_video += [(text, date)]
+        except:
+            print(f"Structure Different for Comment {i}")
+    cleaned_comments[video_response["items"][0]["snippet"]["videoId"]] = cleaned_video
+
+with open("cleaned_comment_data.json", "w") as f:
+    json.dump(cleaned_comments, f)
