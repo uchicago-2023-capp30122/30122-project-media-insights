@@ -7,6 +7,7 @@ import json
 import translators
 import pandas as pd
 from autocorrect import Speller
+from time import sleep
 
 with open("scraping/cleaned_comment_data.json",'r') as f:
     data = json.loads(f.read())
@@ -80,6 +81,9 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
 
                 # Spell checking
                 better_spelling = corrector(translation)
+
+                # Avoid getting blocked
+                sleep(1)
                 clean_comments.append(better_spelling); clean_dates.append(date)
 
     return pd.DataFrame(zip(clean_comments, clean_dates), columns=['text', 'date'])
