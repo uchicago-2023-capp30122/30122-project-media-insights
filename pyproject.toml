@@ -14,7 +14,9 @@ altair = "^4.2.2"
 pandas = "^1.5.3"
 autocorrect = "^2.6.1"
 translators = "^5.5.6"
-flair = "^0.11.3"
+psutil = "^5.9.4"
+transformers = "^4.26.1"
+vadersentiment = "^3.3.2"
 
 
 [build-system]

@@ -8,8 +8,7 @@ import translators
 import pandas as pd
 from autocorrect import Speller
 from time import sleep
-from flair.models import TextClassifier
-from flair.data import Sentence
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Credit: https://stackoverflow.com/questions/51217909/removing-all-emojis-from-text
 EMOJI_PATTERN = re.compile("["
@@ -91,3 +90,8 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
 
     return pd.DataFrame(zip(clean_comments, clean_dates), columns=['text', 'date'])
 
+
+def calculate_comment_sentiment(text: str):
+   return SentimentIntensityAnalyzer().polarity_scores(text)['compound']
+
+clean_text['sentiment'] = clean_text.apply(lambda row: calculate_comment_sentiment(row.text), axis=1)
