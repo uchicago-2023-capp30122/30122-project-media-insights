@@ -1,3 +1,5 @@
+#!/bin/bash
+
 python upload_video.py --file="videos/test1.mov"
                        --title="Summer vacation in California"
                        --description="Had fun surfing in Santa Cruz"
