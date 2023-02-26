@@ -6,9 +6,11 @@ import re
 import json
 import translators
 import pandas as pd
+import spacy
 from autocorrect import Speller
 from time import sleep
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from spacy.lang.en.stop_words import STOP_WORDS
 
 # Credit: https://stackoverflow.com/questions/51217909/removing-all-emojis-from-text
 EMOJI_PATTERN = re.compile("["
@@ -29,10 +31,11 @@ EMOJI_PATTERN = re.compile("["
         u"\u2640-\u2642"
         "]+", flags=re.UNICODE)
 
-with open("data/cleaned_comment_data.json",'r') as f:
-    data = json.loads(f.read())
-
-raw_comments = pd.json_normalize(data)
+try:
+    en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
+except:
+    spacy.cli.download("en_core_web_lg")
+    en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
 
 
 def remove_emojis(text: str):
@@ -74,19 +77,24 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
             no_punct = re.sub(r'[^\w\s]', '', no_newline)
             no_extra_space = re.sub(r'\s+', ' ', no_punct)
             lowercase = no_extra_space.strip().lower()
+            no_links = re.sub(r'http\S+', '', lowercase)
 
             if fast:
-                better_spelling = corrector(lowercase)
-                clean_comments.append(better_spelling); clean_dates.append(date)
-            else:
-                translation = translators.translate_text(lowercase)
-
                 # Spell checking
+                better_spelling = corrector(no_links)
+            else:
+                # Translate to english
+                sleep(1)
+                translation = translators.translate_text(no_links)
+
                 better_spelling = corrector(translation)
 
-                # Avoid getting blocked
-                sleep(1)
-                clean_comments.append(better_spelling); clean_dates.append(date)
+            # Lemmatize and remove stopwords
+            doc = en_model(better_spelling)
+            clean_doc = " ".join([tok.lemma_ for tok in doc 
+                                  if tok.lemma_ not in STOP_WORDS])
+
+            clean_comments.append(clean_doc); clean_dates.append(date)
 
     return pd.DataFrame(zip(clean_comments, clean_dates), columns=['text', 'date'])
 
@@ -94,4 +102,15 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
 def calculate_comment_sentiment(text: str):
    return SentimentIntensityAnalyzer().polarity_scores(text)['compound']
 
-clean_text['sentiment'] = clean_text.apply(lambda row: calculate_comment_sentiment(row.text), axis=1)
+
+if __name__ == '__main__':
+    with open("../data/cleaned_comment_data.json",'r') as f:
+        data = json.loads(f.read())
+
+    raw_comments = pd.json_normalize(data)
+
+    clean_text = preprocess_comments(raw_comments.iloc[:, 0])
+    clean_text['sentiment'] = clean_text.apply(lambda r: calculate_comment_sentiment(r.text), 
+                                           axis=1)
+    clean_text.to_csv("../data/preprocessed_comments.csv")
+
