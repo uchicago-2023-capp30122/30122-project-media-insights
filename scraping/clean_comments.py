@@ -7,7 +7,7 @@ import comments
 import json
 import pdb
 
-with open("comment_data.json", "r") as f:
+with open("../data/comment_data.json", "r") as f:
     video_responses = json.load(f)
 
 cleaned_comments = {}
@@ -22,5 +22,5 @@ for video_response in video_responses:
             print(f"Structure Different for Comment {i}")
     cleaned_comments[video_response["items"][0]["snippet"]["videoId"]] = cleaned_video
 
-with open("cleaned_comment_data.json", "w") as f:
+with open("../data/cleaned_comment_data.json", "w") as f:
     json.dump(cleaned_comments, f)
