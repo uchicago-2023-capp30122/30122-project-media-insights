@@ -48,11 +48,11 @@ def get_comments_api(videoId="YzZUIYRCE38"):
     return response
 
 if __name__ == "__main__":
-    url_lst = ["https://www.youtube.com/watch?v=rgOylRHp1gM",
-            "https://www.youtube.com/watch?v=rgOylRHp1gM",
-            "https://www.youtube.com/watch?v=kiuKPwSpoyI",
-            "https://www.youtube.com/watch?v=QIuo2mGGALA",
-            "https://www.youtube.com/watch?v=aoR9AOfvXWU"]
+    url_lst = ["https://www.youtube.com/watch?v=w55xmZLWfBg",
+            "https://www.youtube.com/watch?v=NsscBcwjTNg",
+            "https://www.youtube.com/watch?v=DEtyL4lXp7s",
+            "https://www.youtube.com/watch?v=ECHlvUyaXFU",
+            "https://www.youtube.com/watch?v=4znhKBm5oOA"]
     get_comments(url_lst)
 
 
