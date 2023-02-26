@@ -12,6 +12,9 @@ from time import sleep
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from spacy.lang.en.stop_words import STOP_WORDS
 
+# This should also be a stopword
+STOP_WORDS.add('s')
+
 # Credit: https://stackoverflow.com/questions/51217909/removing-all-emojis-from-text
 EMOJI_PATTERN = re.compile("["
         u"\U0001F600-\U0001F64F"
@@ -31,6 +34,7 @@ EMOJI_PATTERN = re.compile("["
         u"\u2640-\u2642"
         "]+", flags=re.UNICODE)
 
+# Downloads the lemmas and stopwords if they don't exist
 try:
     en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
 except:
@@ -92,7 +96,7 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
             # Lemmatize and remove stopwords
             doc = en_model(better_spelling)
             clean_doc = " ".join([tok.lemma_ for tok in doc 
-                                  if tok.lemma_ not in STOP_WORDS])
+                                  if tok.lemma_ not in STOP_WORDS and len(tok.lemm_) < 2])
 
             clean_comments.append(clean_doc); clean_dates.append(date)
 
