@@ -8,7 +8,10 @@ import translators
 import pandas as pd
 from autocorrect import Speller
 from time import sleep
+from flair.models import TextClassifier
+from flair.data import Sentence
 
+# Credit: https://stackoverflow.com/questions/51217909/removing-all-emojis-from-text
 EMOJI_PATTERN = re.compile("["
         u"\U0001F600-\U0001F64F"
         u"\U0001F300-\U0001F5FF" 
@@ -27,12 +30,12 @@ EMOJI_PATTERN = re.compile("["
         u"\u2640-\u2642"
         "]+", flags=re.UNICODE)
 
-with open("scraping/cleaned_comment_data.json",'r') as f:
+with open("data/cleaned_comment_data.json",'r') as f:
     data = json.loads(f.read())
 
 raw_comments = pd.json_normalize(data)
 
-# Credit: https://stackoverflow.com/questions/51217909/removing-all-emojis-from-text
+
 def remove_emojis(text: str):
     """
     Remove emojis from strings
