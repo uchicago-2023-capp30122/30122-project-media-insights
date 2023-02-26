@@ -146,7 +146,6 @@ if __name__ == '__main__':
         data = json.loads(f.read())
 
     raw_comments = pd.json_normalize(data)
-
     clean_text = preprocess_comments(raw_comments.iloc[:, 0])
     clean_text['sentiment'] = clean_text.apply(lambda r: calculate_comment_sentiment(r.text), 
                                            axis=1)
