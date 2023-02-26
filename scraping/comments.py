@@ -18,7 +18,7 @@ def get_comments(url_lst):
             video = video.group(0)
             raw_comments += [get_request(videoId=video)]
 
-    with open("comment_data.json", "w") as f:
+    with open("../data/comment_data.json", "w") as f:
         json.dump(raw_comments, f)
 
 
@@ -48,10 +48,11 @@ def get_comments_api(videoId="YzZUIYRCE38"):
     return response
 
 if __name__ == "__main__":
-    url_lst = ["https://www.youtube.com/watch?v=IrGZ66uKcl0",
-            "https://www.youtube.com/watch?v=RrH40nCcjwE",
-            "https://www.youtube.com/watch?v=V4-ycdxqimA",
-            "https://www.youtube.com/watch?v=R6-6wV0agvs"]
+    url_lst = ["https://www.youtube.com/watch?v=rgOylRHp1gM",
+            "https://www.youtube.com/watch?v=rgOylRHp1gM",
+            "https://www.youtube.com/watch?v=kiuKPwSpoyI",
+            "https://www.youtube.com/watch?v=QIuo2mGGALA",
+            "https://www.youtube.com/watch?v=aoR9AOfvXWU"]
     get_comments(url_lst)
 
 
