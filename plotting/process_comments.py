@@ -10,7 +10,6 @@ import spacy
 from autocorrect import Speller
 from time import sleep
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from spacy.lang.en.stop_words import STOP_WORDS
 
 # Credit: https://stackoverflow.com/questions/51217909/removing-all-emojis-from-text
 EMOJI_PATTERN = re.compile("["
@@ -31,14 +30,14 @@ EMOJI_PATTERN = re.compile("["
         u"\u2640-\u2642"
         "]+", flags=re.UNICODE)
 
-STOP_WORDS.add('s')
-
 # Download lemmas and stopwords if needed
 try:
     en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
 except:
     spacy.cli.download("en_core_web_lg")
     en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
+
+STOP_WORDS = en_model.Defaults.stop_words
 
 
 def remove_emojis(text: str):
@@ -117,7 +116,7 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
             # Lemmatize and remove stopwords
             doc = en_model(better_spelling)
             clean_doc = " ".join([tok.lemma_ for tok in doc 
-                                  if tok.lemma_ not in STOP_WORDS or len(tok.lemma_) > 1])
+                                  if tok.lemma_ not in STOP_WORDS and len(tok.lemma_) > 1])
 
             clean_comments.append(clean_doc); clean_dates.append(date)
 
