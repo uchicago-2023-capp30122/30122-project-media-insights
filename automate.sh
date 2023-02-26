@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "You can watch some netflix"
+echo "You can relax while we run the comments and clean_comments program."
 
 sleep 2
 
