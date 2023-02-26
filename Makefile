@@ -1,5 +1,11 @@
-/data/comment_data.json:
-	curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-	cd "${curr_dir}"/scraping
+# .PHONY: everything
 
-	poetry run python comments.py
+# everything : data/comment_data.json
+# 	@echo "Making everything"
+
+data/comment_data.json:
+	cd scraping && poetry run python comments.py
+
+data/clean_comment_data.json: data/comment_data.json
+	cd scraping && poetry run python clean_comments.py
+
