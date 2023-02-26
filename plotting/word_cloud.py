@@ -3,15 +3,17 @@ import json
 import pandas as pd
 import pdb
 
-raw_comments = pd.read_json("../data/preprocessed_comments.json")
+# raw_comments = pd.read_json("../data/cleaned_comment_data.json")
 
-# with open("../data/preprocessed_comments.json", "r") as f:
-#     # pdb.set_trace()
-#     text = json.load(f)
+with open("../data/cleaned_comment_data.json", "r") as f:
+    # pdb.set_trace()
+    text = json.load(f)
+
+total_text = []
+for key in text:
+    for comment in text[key]:
+        total_text += [comment[0]]
+
+print(total_text)
 
 
-# new_text = pd.json_normalize(text)
-
-cleaned_comments = preprocess_comments(raw_comments.iloc[:, 0], fast =False)
-
-print(cleaned_comments)

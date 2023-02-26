@@ -18,12 +18,9 @@ psutil = "^5.9.4"
 transformers = "^4.26.1"
 vadersentiment = "^3.3.2"
 spacy = "^3.5.0"
-<<<<<<< HEAD
 requests = "^2.28.2"
-=======
-matplotlib = "^3.7.0"
->>>>>>> 3254f19 (Stash)
-
+pillow = "^8.4.0"
+wordcloud = "^1.8.2.2"
 
 [build-system]
 requires = ["poetry-core"]

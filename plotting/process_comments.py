@@ -142,12 +142,17 @@ if __name__ == '__main__':
     and other problematic characters, converst them to lowercase, removes stopwords, 
     translates words to English, and lemmatizes them.
     """
+    word_cloud = True
     with open("../data/cleaned_comment_data.json",'r') as f:
         data = json.loads(f.read())
 
     raw_comments = pd.json_normalize(data)
-    clean_text = preprocess_comments(raw_comments.iloc[:, 0])
-    clean_text['sentiment'] = clean_text.apply(lambda r: calculate_comment_sentiment(r.text), 
-                                           axis=1)
-    clean_text.to_json("../data/preprocessed_comments.json")
+    if word_cloud:
+        clean_text = raw_comments.apply(preprocess_comments)
+        clean_text.to_json("../data/word_cloud_comments.json")
 
+    else:
+        clean_text = preprocess_comments(raw_comments.iloc[:, 0])
+        clean_text['sentiment'] = clean_text.apply(lambda r: calculate_comment_sentiment(r.text), 
+                                            axis=1)
+        clean_text.to_json("../data/preprocessed_comments.json")
