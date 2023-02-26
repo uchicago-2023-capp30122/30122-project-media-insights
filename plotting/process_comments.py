@@ -12,9 +12,6 @@ from time import sleep
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from spacy.lang.en.stop_words import STOP_WORDS
 
-# This should also be a stopword
-STOP_WORDS.add('s')
-
 # Credit: https://stackoverflow.com/questions/51217909/removing-all-emojis-from-text
 EMOJI_PATTERN = re.compile("["
         u"\U0001F600-\U0001F64F"
@@ -34,7 +31,9 @@ EMOJI_PATTERN = re.compile("["
         u"\u2640-\u2642"
         "]+", flags=re.UNICODE)
 
-# Downloads the lemmas and stopwords if they don't exist
+STOP_WORDS.add('s')
+
+# Download lemmas and stopwords if needed
 try:
     en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
 except:
@@ -57,6 +56,31 @@ def remove_emojis(text: str):
     return cleaner_text
 
 
+def regex_fix(text: str):
+    """
+    Fixes strings by removing emojis, newlines, tabs, carriage returns, punctuation, 
+    whitespace, and digits and converts to lowercase
+
+    Parameters:
+        text (str): The text to clean
+
+    Returns:
+        (str) Cleaned text
+    """
+    no_emojis = remove_emojis(text)
+    no_newline = re.sub(r'[\r\n\t]', '', no_emojis)
+    no_punct = re.sub(r'[^\w\s]', '', no_newline)
+    no_extra_space = re.sub(r'\s+', ' ', no_punct)
+    lowercase = no_extra_space.strip().lower()
+    no_digits = re.sub(r'[0-9]+', '', lowercase)
+
+    # Remove hyperlinks
+    no_links = re.sub(r'http\S+', '', no_digits)
+    no_links = re.sub(r"[!@#$]", '', no_links)
+
+    return no_links
+
+
 def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
     """
     Preprocess comments by removing emojis, newline, tab, and carriage return characters; 
@@ -75,28 +99,25 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
 
     for comm_lst in raw_comments:
         for comm in comm_lst:
-            text, date = comm[0], comm[1]
-            no_emojis = remove_emojis(text)
-            no_newline = re.sub(r'[\r\n\t]', '', no_emojis)
-            no_punct = re.sub(r'[^\w\s]', '', no_newline)
-            no_extra_space = re.sub(r'\s+', ' ', no_punct)
-            lowercase = no_extra_space.strip().lower()
-            no_links = re.sub(r'http\S+', '', lowercase)
+            text, date = regex_fix(comm[0]), comm[1]
+            
+            if text == '':
+                continue
 
             if fast:
                 # Spell checking
-                better_spelling = corrector(no_links)
+                better_spelling = corrector(text)
             else:
                 # Translate to english
                 sleep(1)
-                translation = translators.translate_text(no_links)
+                translation = translators.translate_text(text)
 
                 better_spelling = corrector(translation)
 
             # Lemmatize and remove stopwords
             doc = en_model(better_spelling)
             clean_doc = " ".join([tok.lemma_ for tok in doc 
-                                  if tok.lemma_ not in STOP_WORDS and len(tok.lemm_) < 2])
+                                  if tok.lemma_ not in STOP_WORDS or len(tok.lemma_) > 1])
 
             clean_comments.append(clean_doc); clean_dates.append(date)
 
@@ -104,10 +125,24 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
 
 
 def calculate_comment_sentiment(text: str):
+   """
+   Calculate the sentiment polarity score using VADER
+
+   Parameters:
+    text (str): The text to analyze
+
+    Returns:
+        (float) The compound sentiment score
+   """
    return SentimentIntensityAnalyzer().polarity_scores(text)['compound']
 
 
 if __name__ == '__main__':
+    """
+    Reads in a json file with raw comments from a youtube video, removes emojis, hyperlinks,
+    and other problematic characters, converst them to lowercase, removes stopwords, 
+    translates words to English, and lemmatizes them.
+    """
     with open("../data/cleaned_comment_data.json",'r') as f:
         data = json.loads(f.read())
 
@@ -116,5 +151,5 @@ if __name__ == '__main__':
     clean_text = preprocess_comments(raw_comments.iloc[:, 0])
     clean_text['sentiment'] = clean_text.apply(lambda r: calculate_comment_sentiment(r.text), 
                                            axis=1)
-    clean_text.to_csv("../data/preprocessed_comments.csv")
+    clean_text.to_json("../data/preprocessed_comments.json")
 
