@@ -29,7 +29,7 @@ def get_request(videoId):
     response = requests.get(url).json()
     return response
 
-def get_comments_api(videoId="YzZUIYRCE38"):
+def get_request_api(videoId="YzZUIYRCE38"):
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
     api_service_name = "youtube"
