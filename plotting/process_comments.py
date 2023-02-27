@@ -30,9 +30,6 @@ EMOJI_PATTERN = re.compile("["
         u"\u2640-\u2642"
         "]+", flags=re.UNICODE)
 
-STOP_WORDS = en_model.Defaults.stop_words
-
-
 def remove_emojis(text: str):
     """
     Remove emojis from strings
@@ -142,6 +139,8 @@ if __name__ == '__main__':
     except:
         spacy.cli.download("en_core_web_lg")
         en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
+
+    STOP_WORDS = en_model.Defaults.stop_words
 
     word_cloud = True
     with open("../data/cleaned_comment_data.json",'r') as f:

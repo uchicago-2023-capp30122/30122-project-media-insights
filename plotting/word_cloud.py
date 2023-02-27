@@ -5,13 +5,17 @@ import numpy as np
 from PIL import Image
 import wordcloud
 import pdb
+from process_comments import regex_fix
 
 stopwords = set(wordcloud.STOPWORDS)
 
 with open("../data/cleaned_comment_data.json", "r") as f:
     text = json.load(f)
 
-total_text = " ".join([comment[0] for key in text for comment in text[key]])
+total_text = " ".join([comment[0] for key in text for comment in text[key] if "Paul" not in comment[0] and "Tony" not in comment[0]])
+
+total_text = regex_fix(total_text)
+# no_punct = re.sub(r'[^\w\s]', '', no_newline)
 print(total_text)
 
 
