@@ -30,13 +30,6 @@ EMOJI_PATTERN = re.compile("["
         u"\u2640-\u2642"
         "]+", flags=re.UNICODE)
 
-# Download lemmas and stopwords if needed
-try:
-    en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
-except:
-    spacy.cli.download("en_core_web_lg")
-    en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
-
 STOP_WORDS = en_model.Defaults.stop_words
 
 
@@ -142,6 +135,14 @@ if __name__ == '__main__':
     and other problematic characters, converst them to lowercase, removes stopwords, 
     translates words to English, and lemmatizes them.
     """
+
+    # Download lemmas and stopwords if needed
+    try:
+        en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
+    except:
+        spacy.cli.download("en_core_web_lg")
+        en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
+
     word_cloud = True
     with open("../data/cleaned_comment_data.json",'r') as f:
         data = json.loads(f.read())

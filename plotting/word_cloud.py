@@ -14,7 +14,8 @@ with open("../data/cleaned_comment_data.json", "r") as f:
 total_text = " ".join([comment[0] for key in text for comment in text[key]])
 print(total_text)
 
-dog_mask = np.array(Image.open("dog.png"))
+
+dog_mask = np.array(Image.open(f"dog.png"))
 
 DPI = 1000
 
@@ -25,4 +26,4 @@ dog_word_cloud = word_cloud_inst.generate(total_text)
 plt.figure(figsize=(10, 10), dpi=DPI)
 plt.imshow(dog_word_cloud.recolor(color_func=dog_colors, random_state=3), interpolation='bilinear')
 plt.axis('off')
-plt.savefig('word_cloud.pdf', bbox_inches='tight', dpi=DPI)
+plt.savefig(f'word_cloud.png', bbox_inches='tight', dpi=DPI)
