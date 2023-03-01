@@ -3,7 +3,8 @@ import altair as alt
 
 def plot_comment_ts(df: pd.DataFrame, title: str):
     """
-    Plot the change in sentiment for a video over time
+    Plot the change in sentiment for a video over time> Note that this uses a colorblind
+    friendly line color.
 
     Parameters:
         df (pd.DataFrame): A pandas dataframe to plot with columns "date" and "sentiment"
@@ -13,7 +14,7 @@ def plot_comment_ts(df: pd.DataFrame, title: str):
         An altair Chart object
     """
     # The base plot
-    ts_plot = alt.Chart(df).mark_line().encode(
+    ts_plot = alt.Chart(df).mark_line(color="#0868ac").encode(
         alt.X(f"yearmonthdatehours(date):T", 
               title="",
 
@@ -24,7 +25,7 @@ def plot_comment_ts(df: pd.DataFrame, title: str):
         alt.Y("sentiment", 
               title="Sentiment")
     ).properties(
-        title=video_title
+        title=title
     )
 
     # The caption, which is not a property in the Chart class
