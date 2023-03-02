@@ -5,9 +5,9 @@ Authored by Darren Colby
 import pandas as pd
 import altair as alt
 
-def plot_comment_ts(df: pd.DataFrame, title: str):
+def plot_sentiment_ts(df: pd.DataFrame, title: str):
     """
-    Plot the change in sentiment for a video over time> Note that this uses a colorblind
+    Plot the change in sentiment for a video over time. Note that this uses a colorblind
     friendly line color.
 
     Parameters:

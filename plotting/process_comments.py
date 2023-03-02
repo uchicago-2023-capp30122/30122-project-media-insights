@@ -156,3 +156,4 @@ if __name__ == '__main__':
         clean_text['sentiment'] = clean_text.apply(lambda r: calculate_comment_sentiment(r.text), 
                                             axis=1)
         clean_text.to_json("../data/preprocessed_comments.json")
+

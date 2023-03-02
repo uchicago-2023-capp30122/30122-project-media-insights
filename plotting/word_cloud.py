@@ -8,12 +8,13 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 import wordcloud
-import pdb
 from process_comments import regex_fix
 
 stopwords = set(wordcloud.STOPWORDS)
 
-with open("../data/cleaned_comment_data.json", "r") as f:
+stopwords.update([""])
+
+with open("../data/preprocessed_comment_data.json", "r") as f:
     text = json.load(f)
 
 total_text = " ".join(
