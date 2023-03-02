@@ -147,6 +147,8 @@ if __name__ == '__main__':
         data = json.loads(f.read())
 
     raw_comments = pd.json_normalize(data)
+
+    # Combine everything into a large set of tokens for wordcloud
     if word_cloud:
         clean_text = raw_comments.apply(preprocess_comments)
         clean_text.to_json("../data/word_cloud_comments.json")
