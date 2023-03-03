@@ -4,11 +4,41 @@ Authored by Darren Colby
 
 import pandas as pd
 import altair as alt
+from prophet import Prophet
 
-def plot_ts(df: pd.DataFrame, title: str, y_col: str, y_title: str, caption: bool):
+
+def get_forecast(df: pd.DataFrame, lead: int):
     """
-    Base function for plotting time series. Essentially this is a python version of multiple
-    dispatch.
+    Make a forcast on time series data
+
+    Parameters:
+        df (pd.DataFrame): A dataframe with "x" and "date" columns
+        lead (int): The number of periods to forecast
+
+    Returns:
+        A dataframe with actual and predicted values
+    """
+    # Prophet requires "ds" and "x" columns and altair doesn't like timezones
+    ts_df = df[["date", "x"]].rename(columns={"date": "ds", "x": "y"})
+    ts_df["ds"] = ts_df.ds.dt.tz_localize(None)
+
+    df2 = df.copy(deep=True)
+    df2["forecast"] = "Actual"
+
+    model = Prophet()
+    model.fit(ts_df)
+    future_df = model.make_future_dataframe(periods=lead)
+    forecast = model.predict(future_df)[["ds", "yhat"]].rename(columns={"ds": "date", 
+                                                                    "yhat": "x"})
+    forecast["forecast"] = "Predicted"
+
+    return pd.concat([forecast, df2[["date", "x", "forecast"]]])
+
+
+def plot_ts(df: pd.DataFrame, title: str, y_col: str, y_title: str, caption: bool, 
+            lead: int):
+    """
+    Base function for plotting time series data and forecasts
 
     Parameters:
         df (pd.DataFrame): The dataframe to plot
@@ -16,24 +46,35 @@ def plot_ts(df: pd.DataFrame, title: str, y_col: str, y_title: str, caption: boo
         y_col (str): The columnt to use for the y-axis
         y_title (str): The title for the y-axis
         caption (bool): Should only be True for sentiment time series
+        lead (int): The number of periods to forecast into the future
 
     Returns:
-        An altair line plot
+        An altair line chart
     """
+    df_to_plot = get_forecast(df, lead)
+
+    # Have to convert to datetime and remove timezone for altair
+    df_to_plot["date"] = pd.to_datetime(df_to_plot.date, utc=True)
+
     # The base plot
-    ts_plot = alt.Chart(df).mark_line(color="#0868ac").encode(
+    ts_plot = alt.Chart(df_to_plot).mark_line().encode(
         alt.X(f"yearmonthdatehours(date):T", 
               title="",
 
               # Only displays the first and last ticks and labels
               # Found suggestion on Stack Overflow from user jakevdp
               # https://stackoverflow.com/questions/59699412/altair-display-all-axis-ticks-but-only-some-tick-labels
-              axis=alt.Axis(tickCount=df.shape[0])),
+              axis=alt.Axis(tickCount=df_to_plot.shape[0])),
         alt.Y(y_col, 
-              title=y_title)
+              title=y_title),
+        color=alt.Color(
+            "forecast:N",
+            legend=alt.Legend(title="")
+        )
     ).properties(
         title=title
     )
+
 
     # Only adds caption for sentiment time series
     if caption:
@@ -57,33 +98,36 @@ def plot_ts(df: pd.DataFrame, title: str, y_col: str, y_title: str, caption: boo
     return ts_plot
 
 
-def plot_sentiment_ts(df: pd.DataFrame, title: str):
+def plot_sentiment_ts(df: pd.DataFrame, lead:int):
     """
-    Plot time series for sentiment of comments on a video
+    Plot time series data and forecast for sentiment of comments on a video
 
     Parameters:
         df (pd.DataFrame): A dataframe with "date" and "sentiment" columns
-        title (str): A title for the plot
+        lead (int): The number of periods to forecast into the future
 
     Returns:
         An altair line chart
     """
-    return plot_ts(df, title, "sentiment", "Sentiment", True)
+    df_copy = df.copy(deep=True)
+    df_copy["x"] = df_copy.sentiment
 
+    return plot_ts(df_copy, "Changes in Sentiment", "x", "Sentiment", True, lead)
 
-def plot_comment_ts(df: pd.DataFrame, title: str):
+ 
+def plot_comment_ts(df: pd.DataFrame, lead: int):
     """
     Plot time series for the number of comments on a video
 
     Parameters:
         df (pd.DataFrame): A dataframe with "date" and "sentiment" columns
-        title (str): A title for the plot
+        lead (int): The number of periods to forecast into the future
 
     Returns:
         An altair line chart
     """
     new_df = df.copy(deep=True)
-    new_df = new_df.date.value_counts().rename_axis("date").reset_index(name="counts")
+    new_df = new_df.date.value_counts().rename_axis("date").reset_index(name="x")
 
-    return plot_ts(new_df, title, "counts", "Comments", False)
+    return plot_ts(new_df, "Comments accross time", "x", "Comments", False, lead)
 
