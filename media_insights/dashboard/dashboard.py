@@ -14,7 +14,7 @@ st.text("Here are the latest analytics from your channel")
 image = Image.open('media_insights/data/word_cloud1.png')
 st.image(image, caption='Top words from your comments section', width=700)
 
-periods = st.slider("Number of periods to forecast", 0, 365, step=1)
+periods = st.slider("Number of periods to forecast", 0, 365, step=1, value=7)
 
 col1, col2 = st.columns(2)
 
