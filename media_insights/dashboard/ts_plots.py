@@ -69,6 +69,7 @@ def plot_ts(df: pd.DataFrame, title: str, y_col: str, y_title: str, caption: boo
               title=y_title),
         color=alt.Color(
             "forecast:N",
+            scale=alt.Scale(range=["steelblue", "orange"]),
             legend=alt.Legend(title="")
         )
     ).properties(
@@ -129,5 +130,5 @@ def plot_comment_ts(df: pd.DataFrame, lead: int):
     new_df = df.copy(deep=True)
     new_df = new_df.date.value_counts().rename_axis("date").reset_index(name="x")
 
-    return plot_ts(new_df, "Comments accross time", "x", "Comments", False, lead)
+    return plot_ts(new_df, "Comments over time", "x", "Comments", False, lead)
 
