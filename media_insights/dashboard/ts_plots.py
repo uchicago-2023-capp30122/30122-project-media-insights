@@ -86,7 +86,7 @@ def plot_ts(df: pd.DataFrame, title: str, y_col: str, y_title: str, caption: boo
             {"values": [{"text": 
                         "Sentiment ranges from -1 for most negative to +1 for most positive"}]}
         ).mark_text(align="left").encode(
-            text="text:N"
+            text="text:N",
         )
 
         final_plot = alt.vconcat(
