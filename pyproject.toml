@@ -24,6 +24,7 @@ wordcloud = "^1.8.2.2"
 ipykernel = "^6.21.2"
 prophet = "^1.1.2"
 streamlit = "^1.19.0"
+gensim = "^4.3.0"
 
 [build-system]
 requires = ["poetry-core"]

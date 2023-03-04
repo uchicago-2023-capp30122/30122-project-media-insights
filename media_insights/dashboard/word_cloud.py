@@ -1,52 +1,44 @@
 """
-    Authored by Jessup Jong
+    Authored by Jessup Jong and Darren Colby
 """
 
 import matplotlib.pyplot as plt
-import json
 import numpy as np
+import pandas as pd
 from PIL import Image
 import wordcloud
-import matplotlib
 
 
-def plot_wordcloud():
+def plot_wordcloud(df: pd.DataFrame):
     """
     Plot a word cloud for comments on a channel
 
     Returns:
         A matplotlib object
     """
-    with open("media_insights/data/cleaned_comment_data.json", "r") as f:
-        text = json.load(f)
+    total_text = "".join([string for string in df.text])
 
-    total_text = " ".join(
-        [
-            comment[0]
-            for key in text
-            for comment in text[key]
-        ]
-    )
-
-    dog_mask = np.array(Image.open(f"media_insights/data/dog1.png"))
+    dog_mask = np.array(Image.open(f"media_insights/data/dog2.png"))
 
     word_cloud_inst = wordcloud.WordCloud(
-        background_color="white",
         mask=dog_mask,
+        contour_width=1.5,
+        contour_color="#b58900",
+        background_color="#002b36"
     )
 
     dog_colors = wordcloud.ImageColorGenerator(dog_mask)
     dog_word_cloud = word_cloud_inst.generate(total_text)
 
-    plot = plt.figure(figsize=(3, 3))
+    plot = plt.figure(dpi=600, facecolor='#002b36')
+    plt.tight_layout(pad=0)
 
     plt.imshow(
-        dog_word_cloud.recolor(color_func=dog_colors, random_state=3),
+        dog_word_cloud.recolor(color_func=dog_colors),
         interpolation="bilinear",
     )
 
     plt.axis("off")
-    plt.title("Top words")
 
-    return plot
+    plt.savefig("media_insights/data/wordcloud.png")
 
