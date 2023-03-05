@@ -120,7 +120,7 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False, series: bool=
             clean_comments.append(clean_doc); clean_dates.append(date)
 
     if series:
-        return pd.Series(zip(clean_comments, clean_dates))
+        return pd.Series(clean_comments)
 
     return pd.DataFrame(zip(clean_comments, clean_dates), columns=['text', 'date'])
 

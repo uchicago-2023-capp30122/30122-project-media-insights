@@ -1,11 +1,12 @@
 import streamlit as st
 import pandas as pd
-from plotting.ts_plots import plot_comment_ts, plot_sentiment_ts
-from plotting.ts_plots import plot_comment_cumsum_ts
+from plotting.ts_plots import plot_comment_ts, plot_sentiment_ts, plot_cosine_similarity
+from plotting.ts_plots import plot_comment_cumsum_ts, plot_comment_ts
 from plotting.word_cloud import plot_wordcloud
 from PIL import Image
 
 main_df = pd.read_json("media_insights/data/preprocessed_comments.json")
+similarity_df = pd.read_json("media_insights/data/similarity_data.json")
 
 st.set_page_config(layout="wide", page_title="Your media analytics")
 
@@ -36,9 +37,13 @@ with col1:
 
     # Sentiment time series
     sentiment_ts_chart = plot_sentiment_ts(main_df, p3)
-    st.altair_chart(sentiment_ts_chart)
+    st.altair_chart(sentiment_ts_chart, use_container_width=True)
 
 with col2:
     # Cumulative comments over time
     comment_cumsum_ts_chart = plot_comment_cumsum_ts(main_df, p3)
     st.altair_chart(comment_cumsum_ts_chart, use_container_width=True)
+
+    # Cosine similarity of video ids
+    cosine_chart = plot_cosine_similarity(similarity_df)
+    st.altair_chart(cosine_chart, use_container_width=True)

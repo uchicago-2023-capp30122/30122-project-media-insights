@@ -5,6 +5,10 @@ Authored by Darren Colby
 import pandas as pd
 import altair as alt
 from prophet import Prophet
+from itertools import product
+from gensim.models import KeyedVectors
+
+glove = KeyedVectors.load("media_insights/data/glove.d2v")
 
 
 def get_forecast(df: pd.DataFrame, lead: int):
@@ -70,10 +74,13 @@ def plot_ts(df: pd.DataFrame, title: str, y_col: str, y_title: str, caption: boo
         color=alt.Color(
             "forecast:N",
             scale=alt.Scale(range=["steelblue", "orange"]),
-            legend=alt.Legend(title="")
+            legend=alt.Legend(title="",
+                              orient="bottom")
         )
     ).properties(
-        title=title
+        title=title,
+        width=300,
+        height=300
     )
 
 
@@ -129,7 +136,9 @@ def plot_comment_ts(df: pd.DataFrame, lead: int):
     new_df = df.copy(deep=True)
     new_df = new_df.date.value_counts().rename_axis("date").reset_index(name="x")
 
-    return plot_ts(new_df, "Comments over time", "x", "Comments", False, lead)
+    # Extra characters in title due to streamlit but
+    # See https://github.com/streamlit/streamlit/issues/5467
+    return plot_ts(new_df, "``Comments over time", "x", "Comments", False, lead)
 
 
 def plot_comment_cumsum_ts(df: pd.DataFrame, lead: int):
@@ -149,5 +158,48 @@ def plot_comment_cumsum_ts(df: pd.DataFrame, lead: int):
     new_df.sort_values("date", inplace=True)
     new_df["x"] = new_df["x"].cumsum()
 
-    return plot_ts(new_df, "Cumulative comments", "x", "Comments", False, lead)
+    # Extra characters in title due to streamlit but
+    # See https://github.com/streamlit/streamlit/issues/5467
+    return plot_ts(new_df, "``Cumulative comments", "x", "Comments", False, lead)
 
+
+def plot_cosine_similarity(df: pd.DataFrame):
+    """
+    Plot a heatmap of the cosine similarity of comments from different videos
+
+    Parameters:
+        df (pd.DataFrame): Dataframe to use for potting
+
+    Returns:
+        An altair chart
+    """
+    df.fillna("", inplace=True)
+
+    all_comments = [" ".join(lst) for lst in  df.T.values.tolist()]
+    perm1, perm2 = [], []
+    similarities = []
+    id1, id2 = [], []
+
+    for p1, p2 in product(all_comments, all_comments):
+        perm1.append(p1); perm2.append(p2)
+        similarities.append(glove.n_similarity(p1.split(), p2.split()))
+
+    for (vid1, vid2) in product(df.columns, df.columns):
+        id1.append(vid1); id2.append(vid2)
+
+    similarities_df = pd.DataFrame(list(zip(perm1, perm2, id1, id2, similarities)), 
+                                columns=["p1", "p2", "vid1", "vid2", "Cosine similarity"])
+
+    base = alt.Chart(similarities_df).mark_rect().encode(
+        x=alt.X('vid1:O',
+                title="Video ID"),
+        y=alt.Y('vid2:O',
+                title="Video ID"),
+        color='Cosine similarity:Q',
+    ).properties(
+        height=300,
+        width=300,
+        title="Comment similarity"
+    )
+
+    return base
