@@ -86,6 +86,15 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False, series: bool=
     clean_comments, clean_dates = [], []
     corrector = Speller()
 
+    # Download lemmas and stopwords if needed
+    try:
+        en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
+    except:
+        spacy.cli.download("en_core_web_lg")
+        en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
+
+    STOP_WORDS = en_model.Defaults.stop_words
+
     for comm_lst in raw_comments:
         for comm in comm_lst:
             text, date = regex_fix(comm[0]), comm[1]
@@ -129,22 +138,12 @@ def calculate_comment_sentiment(text: str):
    return SentimentIntensityAnalyzer().polarity_scores(text)['compound']
 
 
-if __name__ == '__main__':
+def main():
     """
     Reads in a json file with raw comments from a youtube video, removes emojis, hyperlinks,
     and other problematic characters, converst them to lowercase, removes stopwords, 
     translates words to English, and lemmatizes them.
     """
-
-    # Download lemmas and stopwords if needed
-    try:
-        en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
-    except:
-        spacy.cli.download("en_core_web_lg")
-        en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
-
-    STOP_WORDS = en_model.Defaults.stop_words
-
     with open("media_insights/data/cleaned_comment_data.json",'r') as f:
         data = json.loads(f.read())
 
@@ -158,3 +157,6 @@ if __name__ == '__main__':
     similarity_comments = raw_comments.apply(preprocess_comments, series=True)
     similarity_comments.to_json("media_insights/data/similarity_data.json")
 
+
+if __name__ == '__main__':
+    main()
