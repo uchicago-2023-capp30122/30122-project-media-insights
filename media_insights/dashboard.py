@@ -10,7 +10,7 @@ INTRO = """
            quickly see trends in comments and sentiments in your videos. The time series 
            predictions are powered by Prophet, a time series library developed at Facebook,
            that separately models day, month, year, and autoregression components using 
-           Bayesian Markov Chain Montel Carlo. Sentiment classification is based on VADER
+           Bayesian Markov Chain Monte Carlo. Sentiment classification is based on VADER
            using preprocessed text. When conducting sentiment classification, the program 
            removes emojis, newlines, tabs, carriage returns, punctuation, and numbers before
            translating any foreign text to English and correcting misspelled words."""
