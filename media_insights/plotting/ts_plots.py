@@ -89,6 +89,7 @@ def plot_ts(df: pd.DataFrame, title: str, y_col: str, y_title: str, caption: boo
         # The caption, which is not a property in the Chart class
         # Found solution on Stack Overflow by user jakevdp
         # https://stackoverflow.com/questions/57244390/how-to-add-a-subtitle-to-an-altair-generated-chart
+        # It might not show due to 
         caption = alt.Chart(
             {"values": [{"text": 
                         "Sentiment ranges from -1 for most negative to +1 for most positive"

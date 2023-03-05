@@ -5,6 +5,16 @@ from plotting.ts_plots import plot_comment_cumsum_ts, plot_comment_ts
 from plotting.word_cloud import plot_wordcloud
 from PIL import Image
 
+INTRO = """
+           Get insights into your user inteaction on YouTube. This tool enables you to
+           quickly see trends in comments and sentiments in your videos. The time series 
+           predictions are powered by Prophet, a time series library developed at Facebook,
+           that separately models day, month, year, and autoregression components using 
+           Bayesian Markov Chain Montel Carlo. Sentiment classification is based on VADER
+           using preprocessed text. When conducting sentiment classification, the program 
+           removes emojis, newlines, tabs, carriage returns, punctuation, and numbers before
+           translating any foreign text to English and correcting misspelled words."""
+
 main_df = pd.read_json("media_insights/data/preprocessed_comments.json")
 similarity_df = pd.read_json("media_insights/data/similarity_data.json")
 
@@ -12,6 +22,7 @@ st.set_page_config(layout="wide", page_title="Your media analytics")
 
 
 st.title("Media Insights")
+st.text(INTRO)
 st.text("Here are the latest analytics from your channel")
 
 # Make sidebar with sliders to change forecasts
