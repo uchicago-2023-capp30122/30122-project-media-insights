@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
-from media_insights.plotting.ts_plots import plot_comment_ts, plot_sentiment_ts
-from media_insights.plotting.ts_plots import plot_comment_cumsum_ts
-from media_insights.plotting.word_cloud import plot_wordcloud
+from plotting.ts_plots import plot_comment_ts, plot_sentiment_ts
+from plotting.ts_plots import plot_comment_cumsum_ts
+from plotting.word_cloud import plot_wordcloud
 from PIL import Image
 
 main_df = pd.read_json("media_insights/data/preprocessed_comments.json")
