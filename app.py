@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
-from ts_plots import plot_comment_ts, plot_sentiment_ts
-from word_cloud import plot_wordcloud
+from media_insights.plotting.ts_plots import plot_comment_ts, plot_sentiment_ts
+from media_insights.plotting.ts_plots import plot_comment_cumsum_ts
+from media_insights.plotting.word_cloud import plot_wordcloud
 from PIL import Image
 
 main_df = pd.read_json("media_insights/data/preprocessed_comments.json")
@@ -17,8 +18,9 @@ with st.sidebar:
     st.markdown("## Forecast Settings")
     st.markdown("You can **change** how far out to forecast.")
     p1 = st.slider('Comments', min_value=0, max_value=365, step=1, value=7)
-    p2 = st.slider('Sentiment: -1 is most negative and +1 is most positive', 
-                    min_value=0, max_value=365, step=1, value=7)
+    p2 = st.slider('Cumulative comments', min_value=0, max_value=365, step=1, value=7)
+    p3 = st.slider('Sentiment', min_value=0, max_value=365, step=1, value=7)
+    st.text('-1 is negative and +1 is positive')
 
 # plot_wordcloud saves the plot to an image because plotting it is slow
 plot_wordcloud(main_df)
@@ -32,7 +34,11 @@ with col1:
     comment_ts_chart = plot_comment_ts(main_df, p1)
     st.altair_chart(comment_ts_chart, use_container_width=True)
 
-with col2:
     # Sentiment time series
-    sentiment_ts_chart = plot_sentiment_ts(main_df, p2)
-    st.altair_chart(sentiment_ts_chart, use_container_width=True)
+    sentiment_ts_chart = plot_sentiment_ts(main_df, p3)
+    st.altair_chart(sentiment_ts_chart)
+
+with col2:
+    # Cumulative comments over time
+    comment_cumsum_ts_chart = plot_comment_cumsum_ts(main_df, p3)
+    st.altair_chart(comment_cumsum_ts_chart, use_container_width=True)

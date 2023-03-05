@@ -84,17 +84,16 @@ def plot_ts(df: pd.DataFrame, title: str, y_col: str, y_title: str, caption: boo
         # https://stackoverflow.com/questions/57244390/how-to-add-a-subtitle-to-an-altair-generated-chart
         caption = alt.Chart(
             {"values": [{"text": 
-                        "Sentiment ranges from -1 for most negative to +1 for most positive"}]}
+                        "Sentiment ranges from -1 for most negative to +1 for most positive"
+                        }]}
         ).mark_text(align="left").encode(
             text="text:N",
         )
 
-        final_plot = alt.vconcat(
+        ts_plot = alt.vconcat(
             ts_plot,
             caption
         )
-
-        return final_plot
     
     return ts_plot
 
@@ -131,4 +130,24 @@ def plot_comment_ts(df: pd.DataFrame, lead: int):
     new_df = new_df.date.value_counts().rename_axis("date").reset_index(name="x")
 
     return plot_ts(new_df, "Comments over time", "x", "Comments", False, lead)
+
+
+def plot_comment_cumsum_ts(df: pd.DataFrame, lead: int):
+    """
+    Plot time series for the cumulative number of comments on a video
+
+    Parameters:
+        df (pd.DataFrame): A dataframe with "date" and "sentiment" columns
+        lead (int): The number of periods to forecast into the future
+
+    Returns:
+        An altair line chart
+    """
+    new_df = df.copy(deep=True)
+    new_df = new_df.date.value_counts().rename_axis("date").reset_index(name="x")
+    new_df["date"] = pd.to_datetime(new_df.date)
+    new_df.sort_values("date", inplace=True)
+    new_df["x"] = new_df["x"].cumsum()
+
+    return plot_ts(new_df, "Cumulative comments", "x", "Comments", False, lead)
 

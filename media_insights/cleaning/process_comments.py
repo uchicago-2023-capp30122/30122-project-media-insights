@@ -70,7 +70,7 @@ def regex_fix(text: str):
     return no_links
 
 
-def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
+def preprocess_comments(raw_comments: pd.Series, fast: bool=False, series: bool=False):
     """
     Preprocess comments by removing emojis, newline, tab, and carriage return characters; 
     removing punctuation and extra spaces; converting to lowercase; spell checking; and 
@@ -109,6 +109,9 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False):
                                   if tok.lemma_ not in STOP_WORDS and len(tok.lemma_) > 1])
 
             clean_comments.append(clean_doc); clean_dates.append(date)
+
+    if series:
+        return pd.Series(zip(clean_comments, clean_dates))
 
     return pd.DataFrame(zip(clean_comments, clean_dates), columns=['text', 'date'])
 
@@ -151,4 +154,7 @@ if __name__ == '__main__':
     clean_text['sentiment'] = clean_text.apply(lambda r: calculate_comment_sentiment(r.text), 
                                             axis=1)
     clean_text.to_json("media_insights/data/preprocessed_comments.json")
+
+    similarity_comments = raw_comments.apply(preprocess_comments, series=True)
+    similarity_comments.to_json("media_insights/data/similarity_data.json")
 
