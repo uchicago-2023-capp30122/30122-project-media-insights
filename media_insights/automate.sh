@@ -18,6 +18,8 @@ echo -e "\n\nFinished cleaning raw comments data into videoId, date, and text"
 
 sleep 1
 
+cd ../..
+
 poetry run streamlit run media_insights/dashboard.py
 
 echo -e "\n\nCreating dashboard using streamlit"
