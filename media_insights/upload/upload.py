@@ -22,4 +22,4 @@ def upload_http():
     print(response.text)
 
 if __name__ == "__main__":
-    upload()
+    upload_http()

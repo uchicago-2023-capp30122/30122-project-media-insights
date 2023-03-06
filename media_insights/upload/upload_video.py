@@ -2,7 +2,10 @@
 
 """
   Edited by Jessup Jong
-  Source: https://developers.google.com/youtube/v3/guides/uploading_a_video
+
+  This code comes from the source below =
+  and follows the template set out by Google:
+  https://developers.google.com/youtube/v3/guides/uploading_a_video
 
   Automates the upload procedure for videos.
 """
@@ -37,14 +40,7 @@ RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
 
 # The CLIENT_SECRETS_FILE variable specifies the name of a file that contains
 # the OAuth 2.0 information for this application, including its client_id and
-# client_secret. You can acquire an OAuth 2.0 client ID and client secret from
-# the Google API Console at
-# https://console.cloud.google.com/.
-# Please ensure that you have enabled the YouTube Data API for your project.
-# For more information about using OAuth2 to access the YouTube Data API, see:
-#   https://developers.google.com/youtube/v3/guides/authentication
-# For more information about the client_secrets.json file format, see:
-#   https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
+# client_secret.
 CLIENT_SECRETS_FILE = "client_secrets.json"
 
 # This OAuth 2.0 access scope allows an application to upload files to the
@@ -109,17 +105,6 @@ def initialize_upload(youtube, options):
   insert_request = youtube.videos().insert(
     part=",".join(body.keys()),
     body=body,
-    # The chunksize parameter specifies the size of each chunk of data, in
-    # bytes, that will be uploaded at a time. Set a higher value for
-    # reliable connections as fewer chunks lead to faster uploads. Set a lower
-    # value for better recovery on less reliable connections.
-    #
-    # Setting "chunksize" equal to -1 in the code below means that the entire
-    # file will be uploaded in a single HTTP request. (If the upload fails,
-    # it will still be retried where it left off.) This is usually a best
-    # practice, but if you're using Python older than 2.6 or if you're
-    # running on App Engine, you should set the chunksize to something like
-    # 1024 * 1024 (1 megabyte).
     media_body=MediaFileUpload(options.file, chunksize=-1, resumable=True)
   )
 
