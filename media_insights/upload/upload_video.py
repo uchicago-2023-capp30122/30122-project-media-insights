@@ -15,6 +15,7 @@ import os
 import random
 import sys
 import time
+import pdb
 
 from apiclient.discovery import build
 from apiclient.errors import HttpError
@@ -145,6 +146,19 @@ def resumable_upload(insert_request):
       print("Sleeping %f seconds and then retrying..." % sleep_seconds)
       time.sleep(sleep_seconds)
 
+def upload(def_args=None):
+  new_args = def_args
+
+  if not os.path.exists(new_args.file):
+    exit("Please specify a valid file using the --file= parameter.")
+
+  # upload
+  youtube = get_authenticated_service(new_args)
+  try:
+    initialize_upload(youtube, new_args)
+  except HttpError as e:
+    print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
+
 if __name__ == '__main__':
   #adding arguments
   argparser.add_argument("--file", required=True, help="Video file to upload")
@@ -160,12 +174,10 @@ if __name__ == '__main__':
     default=VALID_PRIVACY_STATUSES[0], help="Video privacy status.")
   args = argparser.parse_args()
 
-  # upload
-  if not os.path.exists(args.file):
-    exit("Please specify a valid file using the --file= parameter.")
+  upload(def_args=args)
 
-  youtube = get_authenticated_service(args)
-  try:
-    initialize_upload(youtube, args)
-  except HttpError as e:
-    print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
+
+
+
+
+
