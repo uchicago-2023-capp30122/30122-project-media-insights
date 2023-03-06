@@ -13,11 +13,11 @@ def get_transcripts_request(videoId):
     return requests.get(url).text
 
 if __name__ == "__main__":
-    url_lst = ["https://www.youtube.com/watch?v=B8ISzf2pryI",
-            "https://www.youtube.com/watch?v=NsscBcwjTNg",
-            "https://www.youtube.com/watch?v=DEtyL4lXp7s",
-            "https://www.youtube.com/watch?v=ECHlvUyaXFU",
-            "https://www.youtube.com/watch?v=4znhKBm5oOA"]
+    url_lst = ["https://www.youtube.com/watch?v=z-dOfoxSkFU",
+            "https://www.youtube.com/watch?v=2mdAgnFOzOU",
+            "https://www.youtube.com/watch?v=Xo4txCMetIs",
+            "https://www.youtube.com/watch?v=eN0sAYQ3_NM",
+            "https://www.youtube.com/watch?v=crH_fqwKJuk"]
 
     transcript_data = comments.get_request(url_lst, YouTubeTranscriptApi.get_transcript)
 
