@@ -3,7 +3,6 @@
 everything : data/transcript_data.json data/preprocessed_comments.json
 	echo "Made everything"
 
-
 data/transcript_data.json:
 	cd scraping && poetry run python transcripts.py
 
