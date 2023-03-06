@@ -4,6 +4,7 @@ version = "1.0.0"
 description = "Media Insights Project with Jessup Jong and Darren Colby"
 authors = ["Jessup Jong and Darren Colby"]
 readme = "README.md"
+packages = [{include = "media_insights"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<3.9.7 || >3.9.7,<4.0.0"
