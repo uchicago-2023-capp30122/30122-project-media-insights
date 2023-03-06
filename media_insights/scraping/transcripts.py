@@ -22,7 +22,7 @@ if __name__ == "__main__":
             "https://www.youtube.com/watch?v=eN0sAYQ3_NM",
             "https://www.youtube.com/watch?v=crH_fqwKJuk"]
 
-    transcript_data = comments.get_request(url_lst, YouTubeTranscriptApi.get_transcript)
+    transcript_data, transcript_id = comments.get_request(url_lst, YouTubeTranscriptApi.get_transcript)
 
     with open("../data/transcript_data.json", "w") as f:
-        json.dump(transcript_data, f)
+        json.dump([transcript_id] + transcript_data, f)
