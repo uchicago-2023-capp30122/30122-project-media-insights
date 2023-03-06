@@ -16,7 +16,7 @@ def get_request(url_lst, specific_request):
         video = re.search(r'(?<=v=)[\w-]+', url)
         if video:
             video = video.group(0)
-            raw_data += [specific_request(videoId=video)]
+            raw_data += [specific_request(video)]
 
     return raw_data
 
