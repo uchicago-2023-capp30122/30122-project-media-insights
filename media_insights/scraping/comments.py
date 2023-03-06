@@ -11,14 +11,16 @@ import pdb
 
 def get_request(url_lst, specific_request):
     raw_data = []
+    video_id = []
 
     for url in url_lst:
         video = re.search(r'(?<=v=)[\w-]+', url)
         if video:
             video = video.group(0)
             raw_data += [specific_request(video)]
+            video_id += [video]
 
-    return raw_data
+    return (raw_data, video_id)
 
 
 def get_comments_request(videoId):
@@ -52,8 +54,8 @@ if __name__ == "__main__":
             "https://www.youtube.com/watch?v=DEtyL4lXp7s",
             "https://www.youtube.com/watch?v=ECHlvUyaXFU",
             "https://www.youtube.com/watch?v=4znhKBm5oOA"]
-    
-    comment_data = get_request(url_lst, get_comments_request)
+
+    comment_data = get_request(url_lst, get_comments_request)[0]
 
     with open("../data/comment_data.json", "w") as f:
         json.dump(comment_data, f)
