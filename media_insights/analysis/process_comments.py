@@ -76,11 +76,9 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False, series: bool=
     Preprocess comments by removing emojis, newline, tab, and carriage return characters; 
     removing punctuation and extra spaces; converting to lowercase; spell checking; and 
     translating them to English
-
     Parameters:
         raw_comments (pd.Series): Raw comments to preprocess
         fast (bool): If this is set to False, translation to English is performed
-
     Returns:
         (pd.DataFrame) A dataframe with text and date columns for a given video
     """
@@ -124,7 +122,7 @@ def preprocess_comments(raw_comments: pd.Series, fast: bool=False, series: bool=
         return pd.Series(clean_comments)
 
     return pd.DataFrame(zip(clean_comments, clean_dates), columns=['text', 'date'])
-
+            
 
 def calculate_comment_sentiment(text: str):
    """
@@ -143,13 +141,34 @@ def preprocess_transcripts():
     """
     Cleans transcripts from videos
     """
+    def process_comment(comment: str):
+        corrector = Speller()
+        try:
+            en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
+        except:
+            spacy.cli.download("en_core_web_lg")
+            en_model = spacy.load('en_core_web_lg', disable = ['parser','ner'])
+
+        text = regex_fix(comment)
+        better_spelling = corrector(text)
+        STOP_WORDS = en_model.Defaults.stop_words
+
+        doc = en_model(better_spelling)
+        clean_doc = " ".join([tok.lemma_ for tok in doc 
+                            if tok.lemma_ not in STOP_WORDS and len(tok.lemma_) > 1])
+        
+        return clean_doc
+
     transcripts = pd.read_json("media_insights/data/transcript_data.json").T
-    new_cols = [vid for vid in transcripts.iloc[:, 0] if type(vid) == dict]
-    transcripts.drop(columns=transcripts.columns[0]) 
+    new_cols = [vid for vid in transcripts.iloc[:, 0] if vid is not None]
+    transcripts = transcripts.iloc[:, 1:]
     transcripts.columns = new_cols
     transcripts = transcripts.applymap(lambda x: x if x is not None else {"text": ""})
-    transcripts = transcripts.applymap(lambda x: "".join(x["text"]))
-    transcripts = transcripts.apply(preprocess_comments)
+    transcripts = transcripts.applymap(lambda x: "".join(list(x["text"])))
+    transcripts = transcripts.apply(lambda x: process_comment(str(x))).T
+    transcripts = pd.DataFrame(transcripts).rename_axis("vid")
+    transcripts.reset_index(inplace=True)
+    transcripts.columns = ["vid", "text"]
     transcripts.to_json("media_insights/data/transcript_data.json")
 
 

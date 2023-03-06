@@ -216,9 +216,6 @@ def plot_similar_videos(df: pd.DataFrame):
     Returns:
         An altair chart
     """
-    df = pd.DataFrame(df.apply(lambda x: " ".join(x))).rename_axis("vid")
-    df.reset_index(inplace=True)
-    df.columns = ["vid", "text"]
     own, competitor = df.iloc[0, 1], df.drop(index=[0])
     competitor["Cosine similarity"] = competitor.apply(lambda x: 
                                                        glove.n_similarity(x.text.split(), 
