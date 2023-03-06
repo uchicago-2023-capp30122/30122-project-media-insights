@@ -8,4 +8,3 @@ data/comment_data.json:
 
 data/clean_comment_data.json: data/comment_data.json
 	cd scraping && poetry run python clean_comments.py
-
