@@ -13,13 +13,14 @@ this program allows you to visualize the similarity of competitor videos by usin
 the cosine similarity of the GloVe embeddings of their transcripts.
 
 ## Features
--Automate video uploads
--Can be run by double clicking a single file
--Automatic translation of comments and transcripts to English
--Automatic spelling correction
--Cosine similarities calculated based on GloVe embeddings
--Change the forecast period with a slider
--Uploads secured by OAuth
+
+*Automate video uploads
+*Can be run by double clicking a single file
+*Automatic translation of comments and transcripts to English
+*Automatic spelling correction
+*Cosine similarities calculated based on GloVe embeddings
+*Change the forecast period with a slider
+*Uploads secured by OAuth
 
 ## Usage
 ### Using the automate.sh script
