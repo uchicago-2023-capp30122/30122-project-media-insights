@@ -1,3 +1,7 @@
+"""
+Authored by Jessup Jong
+"""
+
 import requests
 import comments
 import json
