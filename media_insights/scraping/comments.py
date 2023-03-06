@@ -9,27 +9,26 @@ import json
 import googleapiclient.discovery
 import pdb
 
-def get_comments(url_lst):
-    raw_comments = []
+def get_request(url_lst, specific_request):
+    raw_data = []
 
     for url in url_lst:
         video = re.search(r'(?<=v=)[\w-]+', url)
         if video:
             video = video.group(0)
-            raw_comments += [get_request(videoId=video)]
+            raw_data += [specific_request(video)]
 
-    with open("../data/comment_data.json", "w") as f:
-        json.dump(raw_comments, f)
+    return raw_data
 
 
-def get_request(videoId):
+def get_comments_request(videoId):
     api_key = "AIzaSyBgP4m7PSCyZMn8V_cGnl4z6uAXryUtYFs"
 
     url = f"https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId={videoId}&key={api_key}"
     response = requests.get(url).json()
     return response
 
-def get_request_api(videoId="YzZUIYRCE38"):
+def get_comments_request_api(videoId="YzZUIYRCE38"):
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
     api_service_name = "youtube"
@@ -53,7 +52,12 @@ if __name__ == "__main__":
             "https://www.youtube.com/watch?v=DEtyL4lXp7s",
             "https://www.youtube.com/watch?v=ECHlvUyaXFU",
             "https://www.youtube.com/watch?v=4znhKBm5oOA"]
-    get_comments(url_lst)
+    
+    comment_data = get_request(url_lst, get_comments_request)
+
+    with open("../data/comment_data.json", "w") as f:
+        json.dump(comment_data, f)
+
 
 
 # Possibly think about storing data in database

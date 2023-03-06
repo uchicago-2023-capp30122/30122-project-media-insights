@@ -1,5 +1,5 @@
 """
-    Authored by Jessup Jong and Darren Colby
+    Authored by Jessup Jong and edited by Darren Colby
 """
 
 import matplotlib.pyplot as plt
@@ -14,11 +14,11 @@ def plot_wordcloud(df: pd.DataFrame):
     Plot a word cloud for comments on a channel
 
     Returns:
-        A matplotlib object
+        png image file with a dog word cloud.
     """
     total_text = "".join([string for string in df.text])
 
-    dog_mask = np.array(Image.open(f"media_insights/data/dog2.png"))
+    dog_mask = np.array(Image.open(f"media_insights/data/dog.png"))
 
     word_cloud_inst = wordcloud.WordCloud(
         mask=dog_mask,
