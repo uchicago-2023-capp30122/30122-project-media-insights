@@ -1,7 +1,6 @@
 import requests
 import comments
 import json
-import pdb
 from youtube_transcript_api import YouTubeTranscriptApi
 
 def get_transcripts_request(videoId):
