@@ -204,3 +204,33 @@ def plot_cosine_similarity(df: pd.DataFrame):
     )
 
     return base
+
+
+def plot_similar_videos(df: pd.DataFrame):
+    """
+    Plot the cosine similarity of the transcripts of other videos
+
+    Parameters:
+        df (pd.DataFrame): Dataframe of video transcripts
+
+    Returns:
+        An altair chart
+    """
+    df = pd.DataFrame(df.apply(lambda x: " ".join(x))).rename_axis("vid")
+    df.reset_index(inplace=True)
+    df.columns = ["vid", "text"]
+    own, competitor = df.iloc[0, 1], df.drop(index=[0])
+    competitor["Cosine similarity"] = competitor.apply(lambda x: 
+                                                       glove.n_similarity(x.text.split(), 
+                                                                          own), axis=1)
+
+    chart = alt.Chart(competitor).mark_bar().encode(
+        x="Cosine similarity",
+        y=alt.Y("vid",
+            sort="-x",
+        title="Video ID")
+    ).properties(
+        title="Competitor video similarities"
+    )
+
+    return chart

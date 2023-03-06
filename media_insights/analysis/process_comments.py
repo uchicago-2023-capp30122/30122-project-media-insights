@@ -58,7 +58,8 @@ def regex_fix(text: str):
     """
     no_emojis = remove_emojis(text)
     no_newline = re.sub(r'[\r\n\t]', '', no_emojis)
-    no_punct = re.sub(r'[^\w\s]', '', no_newline)
+    no_bracket = re.sub(r" ?\([^)]+\)", "", no_newline)
+    no_punct = re.sub(r'[^\w\s]', '', no_bracket)
     no_extra_space = re.sub(r'\s+', ' ', no_punct)
     lowercase = no_extra_space.strip().lower()
     no_digits = re.sub(r'[0-9]+', '', lowercase)
@@ -138,6 +139,20 @@ def calculate_comment_sentiment(text: str):
    return SentimentIntensityAnalyzer().polarity_scores(text)['compound']
 
 
+def preprocess_transcripts():
+    """
+    Cleans transcripts from videos
+    """
+    transcripts = pd.read_json("media_insights/data/transcript_data.json").T
+    new_cols = [vid for vid in transcripts.iloc[:, 0] if type(vid) == dict]
+    transcripts.drop(columns=transcripts.columns[0]) 
+    transcripts.columns = new_cols
+    transcripts = transcripts.applymap(lambda x: x if x is not None else {"text": ""})
+    transcripts = transcripts.applymap(lambda x: "".join(x["text"]))
+    transcripts = transcripts.apply(preprocess_comments)
+    transcripts.to_json("media_insights/data/transcript_data.json")
+
+
 def main():
     """
     Reads in a json file with raw comments from a youtube video, removes emojis, hyperlinks,
@@ -156,6 +171,8 @@ def main():
 
     similarity_comments = raw_comments.apply(preprocess_comments, series=True)
     similarity_comments.to_json("media_insights/data/similarity_data.json")
+
+    preprocess_transcripts()
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from plotting.ts_plots import plot_comment_ts, plot_sentiment_ts, plot_cosine_similarity
-from plotting.ts_plots import plot_comment_cumsum_ts, plot_comment_ts
+from plotting.ts_plots import plot_comment_cumsum_ts, plot_comment_ts, plot_similar_videos
 from plotting.word_cloud import plot_wordcloud
 from PIL import Image
 
@@ -13,10 +13,13 @@ INTRO = """
            Bayesian Markov Chain Monte Carlo. Sentiment classification is based on VADER
            using preprocessed text. When conducting sentiment classification, the program 
            removes emojis, newlines, tabs, carriage returns, punctuation, and numbers before
-           translating any foreign text to English and correcting misspelled words."""
+           translating any foreign text to English and correcting misspelled words. Finally,
+           this program allows you to visualize the similarity of competitor videos by using
+           the cosine similarity of the GloVe embeddings of their transcripts."""
 
 main_df = pd.read_json("media_insights/data/preprocessed_comments.json")
 similarity_df = pd.read_json("media_insights/data/similarity_data.json")
+competitor_df = df = pd.read_json("media_insights/data/transcript_data.json")
 
 st.set_page_config(layout="wide", page_title="Your media analytics")
 
@@ -58,3 +61,7 @@ with col2:
     # Cosine similarity of video ids
     cosine_chart = plot_cosine_similarity(similarity_df)
     st.altair_chart(cosine_chart, use_container_width=True)
+
+    # Cosine similarity of competitor videos
+    competitor_chart = plot_similar_videos(competitor_df)
+    st.altair_chart(competitor_chart, use_container_width=True)
