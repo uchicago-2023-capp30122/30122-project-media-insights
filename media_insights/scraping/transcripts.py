@@ -24,4 +24,4 @@ if __name__ == "__main__":
 
     transcript_data, transcript_id = comments.get_request(url_lst, YouTubeTranscriptApi.get_transcript)
     with open("../data/transcript_data.json", "w") as f:
-        json.dump(transcript_data, f)
+        json.dump([transcript_id] + transcript_data, f)
