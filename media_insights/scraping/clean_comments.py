@@ -13,7 +13,6 @@ cleaned_comments = {}
 for video_response in video_responses:
     cleaned_video = []
     for i, comment in enumerate(video_response["items"]):
-        pdb.set_trace()
         try:
             text = comment["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
             date = comment["snippet"]["topLevelComment"]["snippet"]["publishedAt"]
