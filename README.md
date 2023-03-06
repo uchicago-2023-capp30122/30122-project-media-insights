@@ -1,5 +1,5 @@
 # Project Media Insights
-Developed by Darren Colby and essup Jong
+Developed by Darren Colby and Jessup Jong
 
 Get insights into your user inteaction on YouTube. This tool enables you to
 quickly see trends in comments and sentiments in your videos. The time series 
@@ -22,6 +22,11 @@ you can use the upload module to automate video uploads.
 * Cosine similarities calculated based on GloVe embeddings
 * Change the forecast period with a slider
 * Uploads secured by OAuth
+
+## Data Sources
+* requests library to use GET requests for comment data from YouTube
+* youtube_transcript_api thired party library for video transcripts
+* gensim for pretrained GloVe model weights and tokens
 
 ## Usage
 ### Using the automate.sh script
