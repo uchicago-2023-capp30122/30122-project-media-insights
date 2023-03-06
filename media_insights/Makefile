@@ -3,6 +3,9 @@
 # everything : data/comment_data.json
 # 	@echo "Making everything"
 
+data/transcript_data.json:
+	cd scraping && poetry run python transcripts.py
+
 data/comment_data.json:
 	cd scraping && poetry run python comments.py
 
