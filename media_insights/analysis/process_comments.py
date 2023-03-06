@@ -144,7 +144,7 @@ def preprocess_transcripts():
     Cleans transcripts from videos
     """
     transcripts = pd.read_json("media_insights/data/transcript_data.json").T
-    new_cols = [vid for vid in transcripts.iloc[:, 0] if type(vid) == dict]
+    new_cols = list(transcripts.iloc[:, 0].notnull())
     transcripts.drop(columns=transcripts.columns[0]) 
     transcripts.columns = new_cols
     transcripts = transcripts.applymap(lambda x: x if x is not None else {"text": ""})
