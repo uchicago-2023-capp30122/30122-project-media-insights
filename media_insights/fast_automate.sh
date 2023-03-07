@@ -2,7 +2,7 @@
 
 export API_KEY="AIzaSyBgP4m7PSCyZMn8V_cGnl4z6uAXryUtYFs"
 
-echo "You can relax while we run all the programs for you. Slow Version"
+echo "You can relax while we run all the programs for you."
 
 curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -27,10 +27,6 @@ echo -e "\n\nFrom second source, finished scraping transcripts from YouTube"
 sleep 1
 
 cd ../..
-
-poetry run python media_insights/analysis/process_comments.py
-
-sleep 4
 
 poetry run streamlit run media_insights/dashboard.py
 
