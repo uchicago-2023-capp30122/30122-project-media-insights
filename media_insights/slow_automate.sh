@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export API_KEY="AIzaSyBgP4m7PSCyZMn8V_cGnl4z6uAXryUtYFs"
+
 echo "You can relax while we run all the programs for you. Slow Version"
 
 curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
