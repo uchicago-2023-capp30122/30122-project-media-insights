@@ -6,8 +6,8 @@
   This code comes from the source below =
   and follows the template set out by Google:
   https://developers.google.com/youtube/v3/guides/uploading_a_video
-
-  Automates the upload procedure for videos.
+  
+  Automates the upload procedsure for videos.
 """
 
 import httplib2

@@ -1,5 +1,8 @@
 """
     Authored by Jessup Jong
+
+    This file cleans the comment raw data and stores information in 
+    a new json file that stores text and date data. 
 """
 
 import comments

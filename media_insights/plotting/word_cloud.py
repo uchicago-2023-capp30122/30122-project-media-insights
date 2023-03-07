@@ -12,6 +12,9 @@ import wordcloud
 def plot_wordcloud(df: pd.DataFrame):
     """
     Plot a word cloud for comments on a channel
+    Input:
+        pandas dataframe: originally did not have any input, but edited
+            to be compatibale and usable from the plotting functions. 
 
     Returns:
         png image file with a dog word cloud.

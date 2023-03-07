@@ -1,11 +1,12 @@
 #!/bin/bash
 
-python upload_video.py --file="videos/test1.mov"
-                       --title="Summer vacation in California"
-                       --description="Had fun surfing in Santa Cruz"
-                       --keywords="surfing,Santa Cruz"
-                       --category="22"
-                       --privacyStatus="public"
+pwd
+
+curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+cd ${curr_dir}
+
+poetry run python upload_video.py --file="videos/test1.mov" --title="Summer vacation in California" --description="Had fun surfing in Santa Cruz" --keywords="surfing, Santa Cruz" --category="22" --privacyStatus="public"
 
 # python upload_video.py --file="videos/test1.mov" --title="Summer vacation in California" --description="Had fun surfing in Santa Cruz" --keywords="surfing, Santa Cruz" --category="22" --privacyStatus="public"
 
