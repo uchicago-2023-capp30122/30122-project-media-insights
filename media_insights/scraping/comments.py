@@ -25,7 +25,6 @@ def get_request(url_lst, specific_request):
 
 def get_comments_request(videoId):
     api_key = os.environ['API_KEY']
-    # api_key = "AIzaSyBgP4m7PSCyZMn8V_cGnl4z6uAXryUtYFs"
 
     url = f"https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId={videoId}&key={api_key}"
     response = requests.get(url).json()
@@ -37,7 +36,6 @@ def get_comments_request_api(videoId="YzZUIYRCE38"):
     api_service_name = "youtube"
     api_version = "v3"
     DEVELOPER_KEY = os.environ['API_KEY']
-    # DEVELOPER_KEY = "AIzaSyBgP4m7PSCyZMn8V_cGnl4z6uAXryUtYFs"
     youtube = googleapiclient.discovery.build(
         api_service_name, api_version, developerKey = DEVELOPER_KEY)
 
